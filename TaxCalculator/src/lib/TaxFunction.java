@@ -16,32 +16,37 @@ public class TaxFunction {
 	 */
 	
 	
-	public static int calculateTax(int monthlySalary, int otherMonthlyIncome, int numberOfMonthWorking, int deductible, boolean isMarried, int numberOfChildren) {
-		
-		int tax = 0;
-		
-		if (numberOfMonthWorking > 12) {
-			System.err.println("More than 12 month working per year");
-		}
-		
-		// Maksimum 3 anak yang diperhitungkan untuk pajak
-		if (numberOfChildren > 3) {
-			numberOfChildren = 3;
-		}
-		
-		// Hitung pajak berdasarkan aturan yang telah dijelaskan
-		if (isMarried) {
-			tax = (int) Math.round(0.05 * (((monthlySalary + otherMonthlyIncome) * numberOfMonthWorking) - deductible - (54000000 + 4500000 + (numberOfChildren * 1500000))));
-		}else {
-			tax = (int) Math.round(0.05 * (((monthlySalary + otherMonthlyIncome) * numberOfMonthWorking) - deductible - 54000000));
-		}
-		
-		if (tax < 0) {
-			return 0;
-		}else {
-			return tax;
-		}
-			 
-	}
+	 public static int calculateTax(int monthlySalary, int otherMonthlyIncome, int numberOfMonthWorking, int deductible, boolean isMarried, int numberOfChildren) {
+        int tax = 0;
+
+        if (numberOfMonthWorking > 12) {
+            System.err.println("More than 12 month working per year");
+        }
+
+        // Maksimum 3 anak yang diperhitungkan untuk pajak
+        if (numberOfChildren > 3) {
+            numberOfChildren = 3;
+        }
+
+        // Hitung pajak berdasarkan aturan yang telah dijelaskan
+        int nonTaxableIncome = 54000000;
+        if (isMarried) {
+            nonTaxableIncome += 4500000;
+        }
+
+        // Tambahkan Rp 4.500.000 per anak hingga anak ketiga
+        for (int i = 0; i < numberOfChildren && i < 3; i++) {
+            nonTaxableIncome += 4500000;
+        }
+
+        tax = (int) Math.round(0.05 * (((monthlySalary + otherMonthlyIncome) * numberOfMonthWorking) - deductible - nonTaxableIncome));
+
+        if (tax < 0) {
+            return 0;
+        } else {
+            return tax;
+        }
+
+    }
 	
 }
